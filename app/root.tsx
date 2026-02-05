@@ -11,6 +11,7 @@ import type { Route } from "./+types/root";
 import "./app.css";
 
 export const links: Route.LinksFunction = () => [
+  { rel: "icon", type: "image/svg+xml", href: "/automono.svg" },
   { rel: "preconnect", href: "https://fonts.googleapis.com" },
   {
     rel: "preconnect",
@@ -25,14 +26,15 @@ export const links: Route.LinksFunction = () => [
 
 export function Layout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en">
+    <html lang="es">
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>Automono</title>
         <Meta />
         <Links />
       </head>
-      <body>
+      <body className="antialiased">
         {children}
         <ScrollRestoration />
         <Scripts />
@@ -46,15 +48,15 @@ export default function App() {
 }
 
 export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
-  let message = "Oops!";
-  let details = "An unexpected error occurred.";
+  let message = "Error";
+  let details = "Ha ocurrido un error inesperado.";
   let stack: string | undefined;
 
   if (isRouteErrorResponse(error)) {
     message = error.status === 404 ? "404" : "Error";
     details =
       error.status === 404
-        ? "The requested page could not be found."
+        ? "La página solicitada no existe."
         : error.statusText || details;
   } else if (import.meta.env.DEV && error && error instanceof Error) {
     details = error.message;
@@ -62,14 +64,18 @@ export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
   }
 
   return (
-    <main className="pt-16 p-4 container mx-auto">
-      <h1>{message}</h1>
-      <p>{details}</p>
-      {stack && (
-        <pre className="w-full p-4 overflow-x-auto">
-          <code>{stack}</code>
-        </pre>
-      )}
+    <main className="flex min-h-screen items-center justify-center p-4">
+      <div className="text-center">
+        <h1 className="text-4xl font-bold text-zinc-900 dark:text-zinc-50">
+          {message}
+        </h1>
+        <p className="mt-2 text-zinc-500">{details}</p>
+        {stack && (
+          <pre className="mt-4 max-w-2xl overflow-x-auto rounded-md bg-zinc-100 p-4 text-left text-sm dark:bg-zinc-900">
+            <code>{stack}</code>
+          </pre>
+        )}
+      </div>
     </main>
   );
 }

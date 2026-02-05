@@ -1,0 +1,64 @@
+<svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+  <!-- MONO -->
+  
+  <!-- orejas exteriores -->
+  <circle cx="6" cy="22" r="9" fill="#8B5A2B"/>
+  <circle cx="50" cy="22" r="9" fill="#8B5A2B"/>
+  <!-- orejas interiores -->
+  <circle cx="7" cy="22" r="5.5" fill="#EDCBAB"/>
+  <circle cx="49" cy="22" r="5.5" fill="#EDCBAB"/>
+  
+  <!-- cabeza (pelaje) -->
+  <ellipse cx="28" cy="26" rx="24" ry="22" fill="#8B5A2B"/>
+  
+  <!-- cara interior (piel clara) -->
+  <ellipse cx="28" cy="30" rx="16" ry="15" fill="#EDCBAB"/>
+  
+  <!-- ojos - fondo blanco -->
+  <ellipse cx="20" cy="26" rx="5" ry="6" fill="#FFF"/>
+  <ellipse cx="36" cy="26" rx="5" ry="6" fill="#FFF"/>
+  
+  <!-- ojos - iris -->
+  <circle cx="21" cy="27" r="3.5" fill="#3D2314"/>
+  <circle cx="37" cy="27" r="3.5" fill="#3D2314"/>
+  
+  <!-- ojos - pupila -->
+  <circle cx="21.5" cy="27.5" r="2" fill="#111"/>
+  <circle cx="37.5" cy="27.5" r="2" fill="#111"/>
+  
+  <!-- ojos - brillo -->
+  <circle cx="19.5" cy="25.5" r="1.2" fill="#FFF"/>
+  <circle cx="35.5" cy="25.5" r="1.2" fill="#FFF"/>
+  
+  <!-- nariz -->
+  <ellipse cx="28" cy="35" rx="3.5" ry="2.5" fill="#6B4226"/>
+  <ellipse cx="26.5" cy="35" rx="1" ry="0.8" fill="#4A2E1A"/>
+  <ellipse cx="29.5" cy="35" rx="1" ry="0.8" fill="#4A2E1A"/>
+  <!-- brillo nariz -->
+  <ellipse cx="27" cy="34" rx="1" ry="0.6" fill="#8B5A36" opacity="0.5"/>
+  
+  <!-- sonrisa simpática -->
+  <path d="M22 40 Q28 46 34 40" stroke="#6B4226" stroke-width="2" fill="none" stroke-linecap="round"/>
+  
+  <!-- DINERO -->
+  
+  <!-- billete verde en diagonal -->
+  <g transform="rotate(-15 44 44)">
+    <rect x="24" y="36" width="24" height="12" rx="1.5" fill="#2E7D32"/>
+    <rect x="26" y="38" width="20" height="8" rx="1" fill="#4CAF50" opacity="0.5"/>
+    <circle cx="36" cy="42" r="2.5" fill="#81C784"/>
+    <text x="36" y="44" text-anchor="middle" font-size="4" font-weight="bold" fill="#1B5E20" font-family="Arial">€</text>
+  </g>
+  
+  <!-- torre de monedas alta (superpuesta al billete) -->
+  <ellipse cx="45" cy="50" rx="3.5" ry="1" fill="#B8860B"/>
+  <rect x="41.5" y="44" width="7" height="6" fill="#F4C430"/>
+  <ellipse cx="45" cy="44" rx="3.5" ry="1" fill="#FFD700"/>
+  <ellipse cx="45" cy="46" rx="3" ry="0.7" fill="#DAA520" opacity="0.5"/>
+  <ellipse cx="45" cy="48" rx="3" ry="0.7" fill="#DAA520" opacity="0.5"/>
+  
+  <!-- torre de monedas baja (superpuesta al billete) -->
+  <ellipse cx="52" cy="47" rx="3" ry="0.9" fill="#B8860B"/>
+  <rect x="49" y="44" width="6" height="3" fill="#F4C430"/>
+  <ellipse cx="52" cy="44" rx="3" ry="0.9" fill="#FFD700"/>
+</svg>

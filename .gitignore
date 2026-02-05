@@ -1,7 +1,13 @@
 .DS_Store
 .env
 /node_modules/
+*.log
 
 # React Router
 /.react-router/
 /build/
+
+# SQLite database
+/data/automono.db
+/data/*.db-shm
+/data/*.db-wal
