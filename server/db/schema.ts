@@ -16,6 +16,12 @@ export const vendors = sqliteTable("vendors", {
   created_at: text().default(sql`(CURRENT_TIMESTAMP)`),
 });
 
+export const projects = sqliteTable("projects", {
+  id: text().primaryKey(),
+  name: text().notNull(),
+  created_at: text().default(sql`(CURRENT_TIMESTAMP)`),
+});
+
 export const invoices = sqliteTable("invoices", {
   id: integer().primaryKey({ autoIncrement: true }),
   drive_file_id: text().notNull().unique(),
@@ -29,6 +35,7 @@ export const invoices = sqliteTable("invoices", {
   status: text().notNull().default("pending"),
   warning_message: text(),
   vendor_id: text().references(() => vendors.id),
+  project_id: text().references(() => projects.id),
   created_at: text().default(sql`(CURRENT_TIMESTAMP)`),
   updated_at: text().default(sql`(CURRENT_TIMESTAMP)`),
 });

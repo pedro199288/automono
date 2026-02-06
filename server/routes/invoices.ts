@@ -13,6 +13,8 @@ import {
   clearInvoiceVendorAndField,
   deleteInvoicesBySubfolder,
   deleteInvoiceById,
+  setInvoiceProject,
+  clearInvoiceProject,
 } from "../db/queries";
 import type { InvoiceWithVendor } from "../db/queries";
 import { extractInvoiceData, type InvoiceData, type GastosData, type IngresosData } from "../services/llm";
@@ -105,6 +107,20 @@ export async function handleInvoiceRoutes(req: Request, url: URL): Promise<Respo
       clearInvoiceVendorAndField(id, vendor_field);
     } else {
       clearInvoiceVendor(id);
+    }
+    return Response.json({ ok: true });
+  }
+
+  // Assign project to invoice
+  if (url.pathname.match(/^\/api\/invoices\/\d+\/project$/) && req.method === "PATCH") {
+    const id = parseInt(url.pathname.split("/")[3], 10);
+    if (isNaN(id)) return Response.json({ error: "Invalid id" }, { status: 400 });
+    const body = await req.json();
+    const { project_id } = body as { project_id: string | null };
+    if (project_id) {
+      setInvoiceProject(id, project_id);
+    } else {
+      clearInvoiceProject(id);
     }
     return Response.json({ ok: true });
   }

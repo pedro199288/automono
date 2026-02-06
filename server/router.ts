@@ -4,6 +4,7 @@ import { handleInvoiceRoutes } from "./routes/invoices";
 import { handleVendorRoutes } from "./routes/vendors";
 import { handleMovementRoutes } from "./routes/movements";
 import { handleRecordRoutes } from "./routes/records";
+import { handleProjectRoutes } from "./routes/projects";
 import { getAllSettings, setSetting } from "./db/queries";
 
 export async function handleRequest(req: Request): Promise<Response> {
@@ -37,7 +38,7 @@ export async function handleRequest(req: Request): Promise<Response> {
     }
 
     // Route to handlers
-    const handlers = [handleAuthRoutes, handleDriveRoutes, handleInvoiceRoutes, handleVendorRoutes, handleMovementRoutes, handleRecordRoutes];
+    const handlers = [handleAuthRoutes, handleDriveRoutes, handleInvoiceRoutes, handleVendorRoutes, handleMovementRoutes, handleRecordRoutes, handleProjectRoutes];
 
     for (const handler of handlers) {
       const response = await handler(req, url);

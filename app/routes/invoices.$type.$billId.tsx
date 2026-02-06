@@ -9,6 +9,9 @@ import {
   useAssignVendor,
   useProcessInvoice,
   useDeleteInvoice,
+  useProjects,
+  useCreateProject,
+  useAssignProject,
 } from "~/hooks/use-invoices";
 import { useInvoiceNavigation } from "~/hooks/use-invoice-navigation";
 import { useInvoiceFilters } from "~/hooks/use-invoice-filters";
@@ -20,6 +23,7 @@ import {
 } from "~/lib/utils";
 import { InvoiceSidebar } from "~/components/InvoiceSidebar";
 import { VendorCombobox } from "~/components/VendorCombobox";
+import { ProjectCombobox } from "~/components/ProjectCombobox";
 import { CategoriaSelect, categoriaColors } from "~/components/CategoriaSelect";
 import { Badge } from "~/components/ui/badge";
 import { Button } from "~/components/ui/button";
@@ -148,6 +152,9 @@ export default function InvoiceDetail() {
   const assignVendor = useAssignVendor();
   const processInvoice = useProcessInvoice();
   const deleteInvoice = useDeleteInvoice();
+  const { data: projectsData } = useProjects();
+  const createProject = useCreateProject();
+  const assignProject = useAssignProject();
 
   const [leftPanel, setLeftPanel] = useState<"pdf" | "raw">("pdf");
   const [editing, setEditing] = useState(false);
@@ -266,6 +273,26 @@ export default function InvoiceDetail() {
   const handleVendorClear = () => {
     assignVendor.mutate({ invoiceId: invoice.id, vendorId: null, vendorField });
     if (editing) setEditData((prev) => ({ ...prev, [vendorField]: null }));
+  };
+
+  const handleProjectSelect = (projectId: string) => {
+    assignProject.mutate({ invoiceId: invoice.id, projectId });
+  };
+
+  const handleProjectCreate = (name: string) => {
+    createProject.mutate(name, {
+      onSuccess: (data) => {
+        assignProject.mutate({
+          invoiceId: invoice.id,
+          projectId: data.project.id,
+        });
+      },
+    });
+  };
+
+  const handleProjectClear = () => {
+    assignProject.mutate({ invoiceId: invoice.id, projectId: null });
+    if (editing) setEditData((prev) => ({ ...prev, proyecto: null }));
   };
 
   const getDisplayValue = (key: string, value: unknown): string | null => {
@@ -483,6 +510,7 @@ export default function InvoiceDetail() {
                         ? editData[key]
                         : extractedData?.[key];
                       const isVendorField = key === vendorField;
+                      const isProjectField = key === "proyecto" && invoice.folder_type === "ingresos";
                       const displayValue = !editing
                         ? getDisplayValue(key, value)
                         : null;
@@ -528,6 +556,26 @@ export default function InvoiceDetail() {
                                       ? editData[vendorField]
                                       : extractedData?.[vendorField])
                                   }
+                                />
+                              </div>
+                            ) : isProjectField ? (
+                              <div className="max-w-xs">
+                                <ProjectCombobox
+                                  projects={projectsData?.projects ?? []}
+                                  value={invoice.project_id ?? null}
+                                  onSelect={handleProjectSelect}
+                                  onCreate={handleProjectCreate}
+                                  onClear={handleProjectClear}
+                                  disabled={
+                                    assignProject.isPending ||
+                                    createProject.isPending
+                                  }
+                                  placeholder={
+                                    invoice.project_name
+                                      ? invoice.project_name
+                                      : "Seleccionar proyecto..."
+                                  }
+                                  clearable={!!invoice.project_id}
                                 />
                               </div>
                             ) : editing ? (

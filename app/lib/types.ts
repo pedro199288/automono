@@ -1,7 +1,7 @@
-import type { InvoiceRow, VendorRow, InvoiceWithVendor, MovementRow, MovementWithVendor } from "../../server/db/zod-schemas";
+import type { InvoiceRow, VendorRow, InvoiceWithVendor, MovementRow, MovementWithVendor, ProjectRow } from "../../server/db/zod-schemas";
 
 // Re-exportar tipos del servidor
-export type { InvoiceRow, VendorRow, InvoiceWithVendor, MovementRow, MovementWithVendor };
+export type { InvoiceRow, VendorRow, InvoiceWithVendor, MovementRow, MovementWithVendor, ProjectRow };
 
 // Tipo para datos del LLM
 export type { GastosData, IngresosData, InvoiceData } from "../../server/services/llm";

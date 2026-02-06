@@ -1,6 +1,6 @@
 import { createSelectSchema, createInsertSchema, createUpdateSchema } from "drizzle-zod";
 import { z } from "zod";
-import { authTokens, vendors, invoices, settings, excludedFolders, financialMovements } from "./schema";
+import { authTokens, vendors, invoices, settings, excludedFolders, financialMovements, projects } from "./schema";
 
 // Select schemas (para validar datos leídos de la DB)
 export const authTokensSelectSchema = createSelectSchema(authTokens);
@@ -8,6 +8,7 @@ export const vendorsSelectSchema = createSelectSchema(vendors);
 export const invoicesSelectSchema = createSelectSchema(invoices);
 export const settingsSelectSchema = createSelectSchema(settings);
 export const excludedFoldersSelectSchema = createSelectSchema(excludedFolders);
+export const projectsSelectSchema = createSelectSchema(projects);
 
 // Insert schemas (para validar datos al insertar)
 export const vendorsInsertSchema = createInsertSchema(vendors);
@@ -23,10 +24,12 @@ export type VendorRow = z.infer<typeof vendorsSelectSchema>;
 export type AuthTokenRow = z.infer<typeof authTokensSelectSchema>;
 export type SettingRow = z.infer<typeof settingsSelectSchema>;
 export type ExcludedFolderRow = z.infer<typeof excludedFoldersSelectSchema>;
+export type ProjectRow = z.infer<typeof projectsSelectSchema>;
 
-// Tipo compuesto para invoice con datos de vendor (JOIN)
+// Tipo compuesto para invoice con datos de vendor y project (JOIN)
 export type InvoiceWithVendor = InvoiceRow & {
   vendor_name: string | null;
+  project_name: string | null;
 };
 
 // Financial Movements schemas

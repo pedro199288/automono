@@ -1,7 +1,7 @@
 import { useState, useCallback } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { api } from "~/lib/api";
-import type { InvoiceWithVendor, VendorRow, TrimestreStats, ExcludedFolderRow } from "~/lib/types";
+import type { InvoiceWithVendor, VendorRow, TrimestreStats, ExcludedFolderRow, ProjectRow } from "~/lib/types";
 
 export function useTrimestres() {
   return useQuery({
@@ -324,6 +324,37 @@ export function useDeleteInvoice() {
       queryClient.invalidateQueries({ queryKey: ["invoices"] });
       queryClient.invalidateQueries({ queryKey: ["invoice"] });
       queryClient.invalidateQueries({ queryKey: ["trimestres"] });
+    },
+  });
+}
+
+// Projects
+export function useProjects() {
+  return useQuery({
+    queryKey: ["projects"],
+    queryFn: () => api.get<{ projects: ProjectRow[] }>("/projects"),
+  });
+}
+
+export function useCreateProject() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (name: string) =>
+      api.post<{ project: ProjectRow }>("/projects", { name }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["projects"] });
+    },
+  });
+}
+
+export function useAssignProject() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: ({ invoiceId, projectId }: { invoiceId: number; projectId: string | null }) =>
+      api.patch<{ ok: boolean }>(`/invoices/${invoiceId}/project`, { project_id: projectId }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["invoices"] });
+      queryClient.invalidateQueries({ queryKey: ["invoice"] });
     },
   });
 }

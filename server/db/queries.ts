@@ -1,11 +1,11 @@
 import { eq, and, sql, inArray } from "drizzle-orm";
 import { db } from "./index";
-import { authTokens, invoices, vendors, settings, excludedFolders, financialMovements } from "./schema";
+import { authTokens, invoices, vendors, settings, excludedFolders, financialMovements, projects } from "./schema";
 import crypto from "crypto";
-import type { InvoiceRow, VendorRow, InvoiceWithVendor, ExcludedFolderRow, MovementRow, MovementWithVendor, MovementInsert } from "./zod-schemas";
+import type { InvoiceRow, VendorRow, InvoiceWithVendor, ExcludedFolderRow, MovementRow, MovementWithVendor, MovementInsert, ProjectRow } from "./zod-schemas";
 
 // Re-export types from zod-schemas
-export type { InvoiceRow, VendorRow, InvoiceWithVendor, ExcludedFolderRow, MovementRow, MovementWithVendor, MovementInsert } from "./zod-schemas";
+export type { InvoiceRow, VendorRow, InvoiceWithVendor, ExcludedFolderRow, MovementRow, MovementWithVendor, MovementInsert, ProjectRow } from "./zod-schemas";
 
 // Settings
 export function getSetting(key: string): string | null {
@@ -60,12 +60,15 @@ export function getInvoicesByType(folderType: InvoiceRow["folder_type"], trimest
       status: invoices.status,
       warning_message: invoices.warning_message,
       vendor_id: invoices.vendor_id,
+      project_id: invoices.project_id,
       created_at: invoices.created_at,
       updated_at: invoices.updated_at,
       vendor_name: vendors.raw_name,
+      project_name: projects.name,
     })
     .from(invoices)
     .leftJoin(vendors, eq(invoices.vendor_id, vendors.id))
+    .leftJoin(projects, eq(invoices.project_id, projects.id))
     .where(conditions)
     .orderBy(invoices.file_name)
     .all();
@@ -90,12 +93,15 @@ export function getInvoicesByTrimestre(trimestre: string, folderType?: InvoiceRo
       status: invoices.status,
       warning_message: invoices.warning_message,
       vendor_id: invoices.vendor_id,
+      project_id: invoices.project_id,
       created_at: invoices.created_at,
       updated_at: invoices.updated_at,
       vendor_name: vendors.raw_name,
+      project_name: projects.name,
     })
     .from(invoices)
     .leftJoin(vendors, eq(invoices.vendor_id, vendors.id))
+    .leftJoin(projects, eq(invoices.project_id, projects.id))
     .where(conditions)
     .orderBy(folderType ? invoices.file_name : invoices.folder_type, invoices.file_name)
     .all();
@@ -118,12 +124,15 @@ export function getInvoiceById(id: number): InvoiceWithVendor | null {
       status: invoices.status,
       warning_message: invoices.warning_message,
       vendor_id: invoices.vendor_id,
+      project_id: invoices.project_id,
       created_at: invoices.created_at,
       updated_at: invoices.updated_at,
       vendor_name: vendors.raw_name,
+      project_name: projects.name,
     })
     .from(invoices)
     .leftJoin(vendors, eq(invoices.vendor_id, vendors.id))
+    .leftJoin(projects, eq(invoices.project_id, projects.id))
     .where(eq(invoices.id, id))
     .get();
 
@@ -293,6 +302,39 @@ export function clearInvoiceVendorAndField(invoiceId: number, fieldName: string)
 
   db.update(invoices)
     .set({ vendor_id: sql`NULL`, extracted_data: newExtractedData, updated_at: sql`CURRENT_TIMESTAMP` })
+    .where(eq(invoices.id, invoiceId))
+    .run();
+}
+
+// Projects
+export function getAllProjects(): ProjectRow[] {
+  return db.select().from(projects).orderBy(projects.name).all();
+}
+
+export function createProject(name: string): ProjectRow {
+  const id = crypto.randomUUID().slice(0, 8);
+  db.insert(projects).values({ id, name }).run();
+  return db.select().from(projects).where(eq(projects.id, id)).get()!;
+}
+
+export function deleteProject(id: string): void {
+  db.update(invoices)
+    .set({ project_id: sql`NULL`, updated_at: sql`CURRENT_TIMESTAMP` })
+    .where(eq(invoices.project_id, id))
+    .run();
+  db.delete(projects).where(eq(projects.id, id)).run();
+}
+
+export function setInvoiceProject(invoiceId: number, projectId: string): void {
+  db.update(invoices)
+    .set({ project_id: projectId, updated_at: sql`CURRENT_TIMESTAMP` })
+    .where(eq(invoices.id, invoiceId))
+    .run();
+}
+
+export function clearInvoiceProject(invoiceId: number): void {
+  db.update(invoices)
+    .set({ project_id: sql`NULL`, updated_at: sql`CURRENT_TIMESTAMP` })
     .where(eq(invoices.id, invoiceId))
     .run();
 }
