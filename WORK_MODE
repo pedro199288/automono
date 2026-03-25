@@ -1,0 +1,17 @@
+# WORK_MODE — Per-project configuration
+#
+# This file controls how agents operate on issues belonging to this project.
+# Each project can have its own mode and wip_limit independently.
+#
+# Agents must detect which project an issue belongs to (via projectId) and
+# apply the corresponding WORK_MODE rules. Different projects within the
+# same company can have different modes simultaneously.
+#
+# mode=controlled : Human approval required. Issues go to backlog+pending-approval.
+#                   Agents stop when in_review count for THIS project >= wip_limit.
+# mode=automatic  : Agents act autonomously. No approval gates.
+#
+# wip_limit applies per-project, not globally across the company.
+
+mode=controlled
+wip_limit=5
